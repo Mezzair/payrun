@@ -1,0 +1,54 @@
+{
+    "name": "appoly/payrun",
+    "description": "Laravel Library for PayRun",
+    "keywords": [
+        "appoly",
+        "payrun"
+    ],
+    "homepage": "https://github.com/appoly/payrun",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "James Merrix",
+            "email": "james@appoly.co.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "illuminate/support": "5.8.*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "3.8.*",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Appoly\\Payrun\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Appoly\\Payrun\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Appoly\\Payrun\\PayrunServiceProvider"
+            ],
+            "aliases": {
+                "Payrun": "Appoly\\Payrun\\PayrunFacade"
+            }
+        }
+    }
+}
