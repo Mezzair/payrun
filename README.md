@@ -1,11 +1,11 @@
-# Very short description of the package
+# Laravel Package for integration with the PayRun.io service
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/appoly/payrun.svg?style=flat-square)](https://packagist.org/packages/appoly/payrun)
 [![Build Status](https://img.shields.io/travis/appoly/payrun/master.svg?style=flat-square)](https://travis-ci.org/appoly/payrun)
 [![Quality Score](https://img.shields.io/scrutinizer/g/appoly/payrun.svg?style=flat-square)](https://scrutinizer-ci.com/g/appoly/payrun)
 [![Total Downloads](https://img.shields.io/packagist/dt/appoly/payrun.svg?style=flat-square)](https://packagist.org/packages/appoly/payrun)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Laravel package to integrate the PayRun.io API service.
 
 ## Installation
 
@@ -37,7 +37,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email james@appoly.co.uk instead of using the issue tracker.
+If you discover any security related issues, please email code@appoly.co.uk instead of using the issue tracker.
 
 ## Credits
 
@@ -47,7 +47,3 @@ If you discover any security related issues, please email james@appoly.co.uk ins
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
