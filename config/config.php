@@ -1,8 +1,6 @@
 <?php
 
-/*
- * You can place your custom package configuration in here.
- */
 return [
-
+	'consumer_key' => env('PAYRUN_CONSUMER_KEY', '');
+	'consumer_secret' => env('PAYRUN_CONSUMER_SECRET','');
 ];
