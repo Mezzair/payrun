@@ -13,8 +13,8 @@ class PayRunHttpClient {
 
 	public function __construct()
 	{	
-		$this->consumer_key = config(['consumer_key' => 'imagick']);
-		$this->consumer_secret = config(['consumer_secret' => 'imagick']);
+		$this->consumer_key = config(['consumer_key' => '']);
+		$this->consumer_secret = config(['consumer_secret' => '']);
 		$this->signature_method = 'HMAC-SHA1';
 		$this->api_url = "https://api.test.payrun.io/";
 	}
