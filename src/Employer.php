@@ -4,7 +4,7 @@ namespace Appoly\Payrun;
 
 use Appoly\Payrun\HttpClient\PayRunHttpClient;
 
-class Payrun
+class Employers
 {
 	   public function __construct(){
 			$this->payRunObject = new PayRunHttpClient();

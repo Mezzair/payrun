@@ -1,7 +1,7 @@
 <?php
 
 namespace Appoly\Payrun\HttpClient;
-
+use Config;
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
@@ -13,14 +13,28 @@ class PayRunHttpClient {
 
 	public function __construct()
 	{	
-		$this->consumer_key = config(['consumer_key' => 'imagick']);
-		$this->consumer_secret = config(['consumer_secret' => 'imagick']);
+
+		
+		// $this->consumer_key = config(['consumer_key' => 'pkqrauIwZUqLw1relB6ZEw']);
+		// $this->consumer_secret = config(['consumer_secret' => 'ADc8UJZX1EVTV0JVvvANQT2oN5KSUO2evjdyGFiAw']);
+			
+		$this->consumer_key = 'pkqrauIwZUqLw1relB6ZEw';
+		$this->consumer_secret = 'ADc8UJZX1EVTV0JVvvANQT2oN5KSUO2evjdyGFiAw';
+
 		$this->signature_method = 'HMAC-SHA1';
 		$this->api_url = "https://api.test.payrun.io/";
 	}
 
-	public function call()
+	/**
+	* call
+	*Call payroll API and collect response
+	*@param $data is Params to pass in API Via (GET,POST,DELETE,PUT)
+	*@param $response returns Response of Payrun.io
+    */
+	public function call($data)
 	{
+
+
 		$stack = HandlerStack::create();
 		$middleware = new Oauth1(
 			[
@@ -38,7 +52,43 @@ class PayRunHttpClient {
 			'handler' => $stack
 		]);
 
-		dd($client);
+		
+
+		// Set the "auth" request option to "oauth" to sign using oauth
+		switch($data['method']){
+			case 'GET':
+
+			$response = $client->get($data['url'], [
+				'auth' => 'oauth',
+				'headers' => [
+					'Accept'     => 'application/json',
+					]
+				]
+			);
+		  break;
+			case 'POST':
+			
+				$response = $client->post($data['url'], [
+					'auth' => 'oauth',
+					'headers' => [
+						'Accept'     => 'application/json',
+						'Content-type' => 'application/json',
+						'Api-Version'=>"Default"
+					],
+					'json'=>$data['data']
+					]
+				);
+			break;
+			
+		   default;
+		   die('Request not found');
+
+
+		}
+		
+
+		$body = (string) $response->getBody();
+		return  json_decode($body);
 	}
 
 }

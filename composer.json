@@ -28,6 +28,7 @@
         "psr-4": {
             "Appoly\\Payrun\\": "src"
         }
+
     },
     "autoload-dev": {
         "psr-4": {
