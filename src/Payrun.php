@@ -4,5 +4,8 @@ namespace Appoly\Payrun;
 
 class Payrun
 {
-    // Build your next great package.
+    public function test()
+    {
+    	return 'Hello World';
+    }
 }
