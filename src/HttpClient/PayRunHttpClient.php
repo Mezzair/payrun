@@ -13,19 +13,8 @@ class PayRunHttpClient {
 
 	public function __construct()
 	{	
-<<<<<<< HEAD
-
-		
-		// $this->consumer_key = config(['consumer_key' => 'pkqrauIwZUqLw1relB6ZEw']);
-		// $this->consumer_secret = config(['consumer_secret' => 'ADc8UJZX1EVTV0JVvvANQT2oN5KSUO2evjdyGFiAw']);
-			
-		$this->consumer_key = 'pkqrauIwZUqLw1relB6ZEw';
-		$this->consumer_secret = 'ADc8UJZX1EVTV0JVvvANQT2oN5KSUO2evjdyGFiAw';
-
-=======
 		$this->consumer_key = config(['consumer_key' => '']);
 		$this->consumer_secret = config(['consumer_secret' => '']);
->>>>>>> 337f32d656c058a0acca349dfa2e3a35b4f53e3c
 		$this->signature_method = 'HMAC-SHA1';
 		$this->api_url = "https://api.test.payrun.io/";
 	}
