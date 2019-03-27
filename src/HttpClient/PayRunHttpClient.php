@@ -1,7 +1,7 @@
 <?php
 
 namespace Appoly\Payrun\HttpClient;
-use Config;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
@@ -11,10 +11,11 @@ use GuzzleHttp\Exception\ClientException;
 
 class PayRunHttpClient {
 
-	public function __construct()
+	public function __construct()	
 	{	
-		$this->consumer_key = config(['consumer_key' => '']);
-		$this->consumer_secret = config(['consumer_secret' => '']);
+		
+		$this->consumer_key = env('PAYRUN_CONSUMER_KEY');
+		$this->consumer_secret = env('PAYRUN_CONSUMER_SECRET');
 		$this->signature_method = 'HMAC-SHA1';
 		$this->api_url = "https://api.test.payrun.io/";
 	}
