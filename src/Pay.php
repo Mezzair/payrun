@@ -4,25 +4,13 @@ namespace Appoly\Payrun;
 
 use Appoly\Payrun\HttpClient\PayRunHttpClient;
 
-class Employers
+class Pay
 {
 	   public function __construct(){
 			$this->payRunObject = new PayRunHttpClient();
 	   }
 
-	/**
-	* create
-	*This method create an employer in payrun.io 
-	*@param $data is the incomming data , the data has all the post params
-	*@param $response returns Response of Payrun.io
-    */
-    public function create($data)
-    {
-    
-    	
-    	$data = ['url' => 'Employers','method'=>'POST','data'=>$data];
-    	return $this->payRunObject->call($data);
-    }
+	
 
     /**
      * PaySchedule
@@ -39,6 +27,24 @@ class Employers
         $response = $this->payRunObject->call($data);
 
         return $response;
+
+        
+    }
+    /**
+     * This api called to create a pay instruction for an employee
+     * @param array $data     the data which of payrun instruction
+     * @param string $employer is employer id
+     * @param string $employee is employee id
+     * @param string $response return to to the parent method
+     */
+    public function PayInstruction($data,$employer,$employee){
+
+        $data = ['method'=>'POST','data'=>$data];
+        $data['url'] = 'Employer/'.$employer.'/Employee/'.$employee.'/PayInstructions';
+        $response = $this->payRunObject->call($data);
+
+        dd($response);
+        die;
 
         
     }
