@@ -1,7 +1,8 @@
 <?php
 
-namespace Appoly\Payrun\HttpClient;
+namespace Appoly\Payrun\Requests;
 
+use Appoly\Payrun\HttpClient\PayrunRequestBatch;
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
@@ -12,6 +13,8 @@ use GuzzleHttp\Exception\RequestException;
 
 class PayRunHttpClient
 {
+    private $consumer_key, $consumer_secret, $signature_method, $api_url, $batch;
+
     public function __construct()
     {
         $this->consumer_key = env('PAYRUN_CONSUMER_KEY');
@@ -21,7 +24,6 @@ class PayRunHttpClient
     }
 
     /**
-     * call
      * Call payroll API and collect response
      * @param $data array - is Params to pass in API Via (GET,POST,DELETE,PUT)
      * @return mixed - returns Response of Payrun.io
@@ -29,28 +31,17 @@ class PayRunHttpClient
      */
     public function call($data)
     {
-        $stack = HandlerStack::create();
+        $client = $this->getGuzzleClient();
 
-        $middleware = new Oauth1([
-            'consumer_key' => $this->consumer_key,
-            'consumer_secret' => $this->consumer_secret,
-            'token_secret' => '',
-            'signature_method' => $this->signature_method
-        ]);
-        $stack->push($middleware);
-        $client = new Client([
-            'base_uri' => $this->api_url,
-            'handler' => $stack
-        ]);
         // Set the "auth" request option to "oauth" to sign using oauth
         switch ($data['method']) {
             case 'GET':
                 try {
 
-                    $response = $client->get($data['url'], [
-                            'auth' => 'oauth',
-                            'headers' => ['Accept' => 'application/json',]
-                        ]);
+                    $response = $client->get($this->api_url . '/' . $data['url'], [
+                        'auth' => 'oauth',
+                        'headers' => ['Accept' => 'application/json',]
+                    ]);
                 } catch (RequestException $e) {
 
                     $response = $e->getResponse();
@@ -67,14 +58,14 @@ class PayRunHttpClient
             case 'POST':
                 try {
                     $response = $client->post($data['url'], [
-                            'auth' => 'oauth',
-                            'headers' => [
-                                'Accept' => 'application/json',
-                                'Content-type' => 'application/json',
-                                'Api-Version' => "Default"
-                            ],
-                            'json' => $data['data']
-                        ]);
+                        'auth' => 'oauth',
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            'Content-type' => 'application/json',
+                            'Api-Version' => "Default"
+                        ],
+                        'json' => $data['data']
+                    ]);
                 } catch (RequestException $e) {
                     $response = $e->getResponse();
                     $responseBodyAsString = $response->getBody()->getContents();
@@ -98,5 +89,53 @@ class PayRunHttpClient
         $string = $rr['@href'];
         $response1 = explode('/', $string);
         return end($response1);
+    }
+
+    public function startBatch()
+    {
+        $this->batch = new PayrunRequestBatch();
+    }
+
+    public function executeBatch($validate_only = false)
+    {
+        $client = $this->getGuzzleClient();
+        $instructions = $this->batch->getInstructions();
+
+        $response = $client->post($this->api_url . '/jobs/batch', [
+            'auth' => 'oauth',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-type' => 'application/json',
+                'Api-Version' => "Default"
+            ],
+            'json' => [
+                "BatchJobInstruction" => [
+                    "HoldingDate" => null,
+                    "ValidateOnly" => $validate_only,
+                    "Instructions" => $instructions
+                ]
+            ]
+        ]);
+
+        $this->batch = null;
+        return $response;
+    }
+
+    public function getGuzzleClient()
+    {
+        $stack = HandlerStack::create();
+        $middleware = new Oauth1([
+            'consumer_key' => $this->consumer_key,
+            'consumer_secret' => $this->consumer_secret,
+            'token_secret' => '',
+            'signature_method' => $this->signature_method
+        ]);
+        $stack->push($middleware);
+
+        $client = new Client([
+            'base_uri' => $this->api_url,
+            'handler' => $stack
+        ]);
+        return $client;
     }
 }

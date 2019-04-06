@@ -4,9 +4,6 @@ namespace Appoly\Payrun;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \Appoly\Payrun\Skeleton\SkeletonClass
- */
 class PayrunFacade extends Facade
 {
     /**
