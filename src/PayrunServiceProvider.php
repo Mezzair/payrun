@@ -2,6 +2,7 @@
 
 namespace Appoly\Payrun;
 
+use Appoly\Payrun\PayrunFacade;
 use Illuminate\Support\ServiceProvider;
 
 class PayrunServiceProvider extends ServiceProvider
@@ -29,7 +30,7 @@ class PayrunServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('payrun', function () {
-            return new Payrun;
+            return new PayrunFacade();
         });
     }
 }
