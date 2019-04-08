@@ -1,6 +1,6 @@
 <?php
 
-namespace Appoly\Payrun\Requests\Employer;
+namespace Appoly\Payrun\RemoteObjects;
 
 use Appoly\Payrun\PayrunRemoteObject;
 
