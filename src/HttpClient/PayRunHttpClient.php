@@ -13,7 +13,8 @@ use GuzzleHttp\Exception\RequestException;
 
 class PayRunHttpClient
 {
-    private $consumer_key, $consumer_secret, $signature_method, $api_url, $batch;
+    private $consumer_key, $consumer_secret, $signature_method, $api_url;
+    public $batch;
 
     public function __construct()
     {
