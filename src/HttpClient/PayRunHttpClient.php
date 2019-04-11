@@ -38,10 +38,13 @@ class PayRunHttpClient
         switch ($data['method']) {
             case 'GET':
                 try {
-
-                    $response = $client->get($this->api_url . '/' . $data['url'], [
+                    $response = $client->get($this->api_url . $data['url'], [
                         'auth' => 'oauth',
-                        'headers' => ['Accept' => 'application/json',]
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            // 'Accept' => 'application/xml', Needed for payslip pdf
+                            // 'Content-type' => 'application/xml',
+                        ]
                     ]);
                 } catch (RequestException $e) {
 
@@ -62,6 +65,7 @@ class PayRunHttpClient
                         'auth' => 'oauth',
                         'headers' => [
                             'Accept' => 'application/json',
+                            'Accept' => 'application/xml',
                             'Content-type' => 'application/json',
                             'Api-Version' => "Default"
                         ],
@@ -85,6 +89,9 @@ class PayRunHttpClient
                 die('Request not found');
         }
         $body = (string)$response->getBody();
+        // dd($body);
+
+        //needs to cator for a response like "@href": "/jobs/payruns/4c8bdc3f-8815-4d4e-ae9c-687ab76ec20e/info" as we need the 4c8bd bit
         $response = json_decode($body);
         $rr = (array)$response->Link;
         $string = $rr['@href'];
