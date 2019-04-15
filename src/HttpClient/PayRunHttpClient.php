@@ -4,17 +4,18 @@ namespace Appoly\Payrun\Requests;
 
 use Appoly\Payrun\HttpClient\PayrunRequestBatch;
 use GuzzleHttp\Client;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 class PayRunHttpClient
 {
     private $consumer_key, $consumer_secret, $signature_method, $api_url;
     public $batch;
+    public $response_type;
 
     public function __construct()
     {
@@ -22,6 +23,7 @@ class PayRunHttpClient
         $this->consumer_secret = env('PAYRUN_CONSUMER_SECRET');
         $this->signature_method = 'HMAC-SHA1';
         $this->api_url = "https://api.test.payrun.io/";
+        $this->response_type = "JSON";
     }
 
     /**
@@ -35,10 +37,10 @@ class PayRunHttpClient
         $client = $this->getGuzzleClient();
 
         // Set the "auth" request option to "oauth" to sign using oauth
-        switch ($data['method']) {
+        switch ($data[ 'method' ]) {
             case 'GET':
                 try {
-                    $response = $client->get($this->api_url . $data['url'], [
+                    $response = $client->get($this->api_url . $data[ 'url' ], [
                         'auth' => 'oauth',
                         'headers' => [
                             'Accept' => 'application/json',
@@ -61,7 +63,7 @@ class PayRunHttpClient
                 break;
             case 'POST':
                 try {
-                    $response = $client->post($data['url'], [
+                    $response = $client->post($data[ 'url' ], [
                         'auth' => 'oauth',
                         'headers' => [
                             'Accept' => 'application/json',
@@ -69,7 +71,7 @@ class PayRunHttpClient
                             'Content-type' => 'application/json',
                             'Api-Version' => "Default"
                         ],
-                        'json' => $data['data']
+                        'json' => $data[ 'data' ]
                     ]);
                 } catch (RequestException $e) {
                     $response = $e->getResponse();
@@ -88,15 +90,27 @@ class PayRunHttpClient
             default;
                 die('Request not found');
         }
-        $body = (string)$response->getBody();
-        // dd($body);
 
-        //needs to cator for a response like "@href": "/jobs/payruns/4c8bdc3f-8815-4d4e-ae9c-687ab76ec20e/info" as we need the 4c8bd bit
-        $response = json_decode($body);
-        $rr = (array)$response->Link;
-        $string = $rr['@href'];
-        $response1 = explode('/', $string);
-        return end($response1);
+        //
+        // In most cases we only need the ID of the object being actioned.
+        // Allow for multiple response types for PDF etc.
+        //
+        switch ($this->response_type) {
+            case "file":
+                return $response->getBody();
+
+            case "JSON":
+            default:
+                $body = (string) $response->getBody();
+
+                //needs to cator for a response like "@href": "/jobs/payruns/4c8bdc3f-8815-4d4e-ae9c-687ab76ec20e/info" as we need the 4c8bd bit
+                $response = json_decode($body);
+                $rr = (array) $response->Link;
+                $string = $rr[ '@href' ];
+                $response1 = explode('/', $string);
+                return end($response1);
+        }
+
     }
 
     public function startBatch()

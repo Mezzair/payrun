@@ -13,14 +13,15 @@ class PaySlip extends PayrunRemoteObject
     //     return $this->request->get();
     // }
 
-    public function get($employer_id, $pay_schedule_id, $tax_year, $payment_date, $pdf = false)
+    public function get($employer_id, $pay_schedule_id, $tax_year, $payment_date)
     {
-        $this->request->url = "Report/PAYSLIP3/run?EmployerKey=".$employer_id."&PayScheduleKey=".$pay_schedule_id."&TaxYear=".$tax_year."&PaymentDate=".$payment_date;
-        //One underneath is for pdf
-        if($pdf){
-            $this->request->url = "Report/PAYSLIP3/run?EmployerKey=".$employer_id."&PayScheduleKey=".$pay_schedule_id."&TaxYear=".$tax_year."&PaymentDate=".$payment_date.'&TransformDefinitionKey=Payslip-A5-Basic-Pdf';
-        }
+        $this->request->url = "Report/PAYSLIP3/run?EmployerKey=" . $employer_id . "&PayScheduleKey=" . $pay_schedule_id . "&TaxYear=" . $tax_year . "&PaymentDate=" . $payment_date;
+        return $this->request->get();
+    }
 
+    public function getPDF($employer_id, $pay_schedule_id, $tax_year, $payment_date)
+    {
+        $this->request->url = "Report/PAYSLIP3/run?EmployerKey=" . $employer_id . "&PayScheduleKey=" . $pay_schedule_id . "&TaxYear=" . $tax_year . "&PaymentDate=" . $payment_date . '&TransformDefinitionKey=Payslip-A5-Basic-Pdf';
         return $this->request->get();
     }
 
