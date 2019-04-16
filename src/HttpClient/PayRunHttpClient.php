@@ -66,8 +66,8 @@ class PayRunHttpClient
                     $response = $client->post($data[ 'url' ], [
                         'auth' => 'oauth',
                         'headers' => [
-                            'Accept' => 'application/json',
-                            'Accept' => 'application/xml',
+                            'Accept' => $this->response_type == 'file' ? 'application/xml' : 'application/json',
+                            //'Accept' => 'application/xml',
                             'Content-type' => 'application/json',
                             'Api-Version' => "Default"
                         ],
@@ -91,6 +91,9 @@ class PayRunHttpClient
                 die('Request not found');
         }
 
+
+        // dd($response->getBody());
+
         //
         // In most cases we only need the ID of the object being actioned.
         // Allow for multiple response types for PDF etc.
@@ -99,11 +102,17 @@ class PayRunHttpClient
             case "file":
                 return $response->getBody();
 
+            case "uuid":
+                $body = (string) $response->getBody();
+                $response = json_decode($body);
+                $rr = (array) $response->Link;
+                $string = $rr[ '@href' ];
+                $response1 = preg_match('/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/', $string, $matches);
+                return $matches[0];
+
             case "JSON":
             default:
                 $body = (string) $response->getBody();
-
-                //needs to cator for a response like "@href": "/jobs/payruns/4c8bdc3f-8815-4d4e-ae9c-687ab76ec20e/info" as we need the 4c8bd bit
                 $response = json_decode($body);
                 $rr = (array) $response->Link;
                 $string = $rr[ '@href' ];
