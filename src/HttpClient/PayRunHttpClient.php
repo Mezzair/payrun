@@ -40,12 +40,13 @@ class PayRunHttpClient
         switch ($data[ 'method' ]) {
             case 'GET':
                 try {
+                    // dd($data);
                     $response = $client->get($this->api_url . $data[ 'url' ], [
                         'auth' => 'oauth',
                         'headers' => [
-                            'Accept' => 'application/json',
+                            'Accept' => $this->response_type == 'file' ? 'application/xml' : 'application/json',
                             // 'Accept' => 'application/xml', Needed for payslip pdf
-                            // 'Content-type' => 'application/xml',
+                            'Content-type' => 'application/xml',
                         ]
                     ]);
                 } catch (RequestException $e) {
