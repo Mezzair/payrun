@@ -88,13 +88,35 @@ class PayRunHttpClient
                     throw new \Exception($responseBodyAsString);
                 }
                 break;
+            case 'PATCH':
+                try {
+                    $response = $client->patch($data[ 'url' ], [
+                        'auth' => 'oauth',
+                        'headers' => [
+                            'Accept' => $this->response_type == 'file' ? 'application/xml' : 'application/json',
+                            //'Accept' => 'application/xml',
+                            'Content-type' => 'application/json',
+                            'Api-Version' => "Default"
+                        ],
+                        'json' => $data[ 'data' ]
+                    ]);
+                } catch (RequestException $e) {
+                    $response = $e->getResponse();
+                    $responseBodyAsString = $response->getBody()->getContents();
+
+                    throw new \Exception($responseBodyAsString);
+
+                } catch (\GuzzleHttp\Exception\ConnectException $e) {
+                    $responseBodyAsString = $e->getResponse()->getContents();
+                    throw new \Exception($responseBodyAsString);
+                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                    $responseBodyAsString = $e->getResponse()->getContents();
+                    throw new \Exception($responseBodyAsString);
+                }
+                break;
             default;
                 die('Request not found');
         }
-
-
-        // dd($response->getBody());
-
         //
         // In most cases we only need the ID of the object being actioned.
         // Allow for multiple response types for PDF etc.
