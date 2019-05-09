@@ -42,6 +42,8 @@ If you discover any security related issues, please email code@appoly.co.uk inst
 ## Credits
 
 - [James Merrix](https://github.com/appoly)
+- [John Wedgbury](https://github.com/appoly)
+- [Calum Chamberlain](https://github.com/appoly)
 - [All Contributors](../../contributors)
 
 ## License
